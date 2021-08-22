@@ -1,0 +1,11 @@
+[
+<% @psicologos.each do |psicologo| %>
+    {
+        "id": "<%= psicologo[:id] %>",
+        "cedula": "<%= psicologo[:cedula] %>",
+        "nombreCompleto": "<%= psicologo[:nombreCompleto] %>",
+        "email": "<%= psicologo[:email] %>",
+        "clave": "<%= psicologo[:clave] %>"
+    },
+<% end %>
+]
