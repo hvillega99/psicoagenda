@@ -1,0 +1,10 @@
+[
+    <% @atenciones.each do |atencion| %>
+    {
+        "id del paciente": "<%= atencion[:idPaciente] %>",
+        "id del psicologo": "<%= atencion[:idPsicologo] %>",
+        "Observaciones": "<%= atencion[:observaciones] %>",
+        "fecha": "<%= atencion[:fecha] %>"
+    },
+    <% end %>
+]

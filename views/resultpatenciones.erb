@@ -1,0 +1,10 @@
+[
+    <% @patenciones.each do |patencion| %>
+    {
+        "id del paciente": "<%= patencion[:idPaciente] %>",
+        "nombre del psicologo": "<%= patencion[:nombreCompleto] %>",
+        "Observaciones": "<%= patencion[:observaciones] %>",
+        "fecha": "<%= patencion[:fecha] %>"
+    },
+    <% end %>
+]
