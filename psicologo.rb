@@ -44,4 +44,26 @@ post '/psicologos' do
     erb :resultpsico
 end
 
+#Mostrar atenciones
+get '/atenciones' do
+    @atenciones = client.query("SELECT * FROM atenciones", :symbolize_keys => true)
+    erb :resultatenciones
+end
+
+#Mostrar atenciones por id de Cliente
+get '/atenciones/:id' do
+    @patenciones = client.query("SELECT atenciones.idPaciente, psicologos.nombreCompleto, atenciones.observaciones, atenciones.fecha
+                                FROM atenciones
+                                INNER join psicologos on atenciones.idPsicologo = psicologos.id
+                                WHERE idPaciente = #{params[:id].to_i}", :symbolize_keys => true)
+    erb :resultpatenciones
+end
+
+#Creat atenciones
+post '/atenciones' do
+    data = JSON.parse request.body.read
+    client.query("INSERT INTO atenciones VALUES ('#{data['idPaciente']}', '#{data['idPsicologo']}', '#{data['observaciones']}', '#{data['fecha']}')", :symbolize_keys => true)
+    @atenciones = client.query("SELECT * FROM atenciones ORDER BY fecha LIMIT 1", :symbolize_keys => true)
+    erb :resultatenciones
+end
 
