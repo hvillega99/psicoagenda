@@ -13,21 +13,25 @@ before do
     content_type :json
 end
 
+#obtener todos los turnos
 get '/turnos' do
     @result = client.query("SELECT * FROM turnos", :symbolize_keys => true).each
     erb :turnos
 end
 
+#obtener turno por id
 get '/turnos/:id' do
     @result = client.query("SELECT * FROM turnos WHERE id='#{params[:id]}'", :symbolize_keys => true).each
     erb :turnos
 end
 
+#obtener turnos disponibles por id de psicólogo
 get '/turnos/disponibles/:idPsicologo' do
     @result = client.query("SELECT * FROM turnos where estado='disponible' and idPsicologo='#{params[:idPsicologo]}'", :symbolize_keys => true).each
     erb :turnos
 end
 
+#crear un turno
 post '/turnos' do
     data = JSON.parse request.body.read
     client.query("INSERT INTO turnos (fecha,hora,estado,idPsicologo) VALUES ('#{data['fecha']}','#{data['hora']}','#{data['estado']}','#{data['idPsicologo']}')")
@@ -35,6 +39,7 @@ post '/turnos' do
     erb :turnos
 end
 
+#actualizar un turno
 put '/turnos/:id' do
     data = JSON.parse request.body.read
     client.query("UPDATE turnos SET fecha = '#{data['fecha']}', hora = '#{data['hora']}', estado = '#{data['estado']}', idPsicologo = '#{data['idPsicologo']}' WHERE id='#{params[:id]}'")
