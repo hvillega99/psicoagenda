@@ -38,13 +38,13 @@ end
 #Psicólogos-------------------------------
 #Obtener todos los psicólogos
 get '/psicologos' do
-    @psicologos = client.query("SELECT * from psicologos", :symbolize_keys => true)
+    @psicologos = client.query("SELECT * from psicologos", :symbolize_keys => true).each
     erb :resultpsico
 end
 
 #Obtener psicólogo por id
 get '/psicologos/:id' do
-    @psicologos = client.query("SELECT * from psicologos WHERE id = #{params[:id].to_i}", :symbolize_keys => true)
+    @psicologos = client.query("SELECT * from psicologos WHERE id = #{params[:id].to_i}", :symbolize_keys => true).each
     erb :resultpsico
 end
 
@@ -52,7 +52,7 @@ end
 post '/psicologos' do
     data = JSON.parse request.body.read
     client.query("INSERT INTO psicologos(cedula, nombreCompleto, email, clave) VALUES ('#{data['cedula']}', '#{data['nombreCompleto']}', '#{data['email']}', '#{data['clave']}')", :symbolize_keys => true)
-    @psicologos = client.query("SELECT * FROM  psicologos ORDER BY id DESC LIMIT 1", :symbolize_keys => true)
+    @psicologos = client.query("SELECT * FROM  psicologos ORDER BY id DESC LIMIT 1", :symbolize_keys => true).each
     erb :resultpsico
 end
 
