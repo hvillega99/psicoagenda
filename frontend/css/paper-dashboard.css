@@ -3635,6 +3635,7 @@ License - nucleoapp.com/license/
   margin-bottom: 20px;
   position: relative;
   border: 0 none;
+  height: 72vh;
   transition: transform 300ms cubic-bezier(0.34, 2, 0.6, 1), box-shadow 200ms ease; }
   .card .card-body {
     padding: 15px 15px 10px 15px; }
