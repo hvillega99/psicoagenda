@@ -1,3 +1,11 @@
+function borrarL() {
+  localStorage.removeItem('tipo');
+  localStorage.removeItem('id');
+  window.location.href='login.html';
+}
+
+
+
 const getInfo = async () => {
     const uri = `http://127.0.0.1:4567/pacientes/${localStorage.getItem("id")}`;
     const response = await fetch(uri);
