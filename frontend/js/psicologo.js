@@ -44,7 +44,7 @@ const showCitas = (citas) => {
 
         table += `</tbody></table>`;
 
-        divHistorial.innerHTML ='<h3 class="text-center">Historial de atenciones</h3>' + table;
+        divHistorial.innerHTML ='<h3 class="text-center">Historial de citas</h3>' + table;
     }else{
         divHistorial.innerHTML = '<h3 class="text-center">No hay información para mostrar</h3>';
     }
@@ -82,7 +82,6 @@ window.addEventListener("load", async(event) => {
                     Fecha: ${result.fecha}
                     Hora: ${result.hora}
                   </p>
-                  <button class="btn btn-danger">Cancelar</button>
                 </div>
               </div>`
 
