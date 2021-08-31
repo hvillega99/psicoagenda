@@ -1,0 +1,33 @@
+body{
+    background-color: white;
+
+}
+
+.form-group{
+    margin: 5px;
+}
+
+.nav-pills .nav-link{
+
+    border-color: blue;
+    
+}
+
+
+.nav-pills .nav-link.active, .nav-pills .nav-link:focus, .nav-pills .nav-link:hover {
+    background-color:blue;
+    border-color: blue;
+    color: white;
+}
+
+.tab-content{
+    margin-left: 150px;
+}
+
+.flex-column button{
+    margin-bottom: 10px;
+
+}
+.nav-item{
+    margin-right: 15px;
+}
