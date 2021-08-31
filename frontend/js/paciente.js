@@ -59,7 +59,7 @@ window.addEventListener("load", async (event) => {
             window.location.href='dashboardPsicologo.html';
         }else{
             const paciente = await getInfo();
-            document.getElementById('saludo').textContent = `Bienvenido ${paciente[0].nombreCompleto}`;
+            document.getElementById('saludo').textContent = `¡Hola ${paciente[0].nombreCompleto}!`;
             
             const citas = await getCitas();
 
@@ -67,10 +67,11 @@ window.addEventListener("load", async (event) => {
 
             const result = citas.find(item => item.estado == 'No iniciada')
 
-            if(result){
-                document.getElementById('status').textContent = 'Usted tiene una cita agendada';
+            const divStatus = document.getElementById('status');
+            const divInfo = document.getElementById('cita-info');
 
-                const divInfo = document.getElementById('cita-info');
+            if(result){
+                divStatus.textContent = 'Usted tiene una cita agendada';
                 divInfo.innerHTML = `<div class="card text-center">
                 <div class="card-header">
                   Información de la cita
@@ -86,7 +87,8 @@ window.addEventListener("load", async (event) => {
               </div>`
 
             }else{
-                document.getElementById('status').textContent = 'Actualmente no tiene una cita agendada';
+              divStatus.textContent = 'Actualmente no tiene una cita agendada';
+              divInfo.innerHTML = `<img src="./img/sad.png" class="img-fluid w-25 h-25" alt="psi">`;
             }
         }
     }else{
