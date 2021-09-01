@@ -60,6 +60,12 @@ window.addEventListener("load", async (event) => {
         }else{
             const paciente = await getInfo();
             document.getElementById('saludo').textContent = `¡Hola ${paciente[0].nombreCompleto}!`;
+            document.getElementById('nombre').textContent = `${paciente[0].nombreCompleto}`;
+
+            //Datos personales---------
+            document.getElementById('perfilNombre').textContent = `Nombre: ${paciente[0].nombreCompleto}`;
+            document.getElementById('perfilCedula').textContent = `Cédula: ${paciente[0].cedula}`;
+            document.getElementById('perfilMail').textContent = `Email: ${paciente[0].email}`;
             
             const citas = await getCitas();
 
@@ -121,4 +127,10 @@ document.getElementById('tab-historial')
 .addEventListener('click', e =>{
   setInvisible();
   document.getElementById('historial').style.display='block';
+});
+
+document.getElementById('tab-perfil')
+.addEventListener('click', e =>{
+  setInvisible();
+  document.getElementById('perfil').style.display='block';
 });
