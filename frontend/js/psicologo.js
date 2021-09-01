@@ -68,6 +68,9 @@ window.addEventListener("load", async(event) => {
 
             const result = citas.find(item => item.estado == 'No iniciada')
 
+            const divStatus = document.getElementById('status');
+            const divInfo = document.getElementById('cita-info');
+
             if(result){
                 document.getElementById('status').textContent = 'Usted tiene una cita agendada';
 
