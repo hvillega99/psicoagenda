@@ -1,5 +1,5 @@
 body{
-  overflow:hidden;
+  overflow-x: hidden;
 }
 
 .tab{
@@ -8,4 +8,20 @@ body{
 
 #menu{
   background-color: #ECF0F1;
+}
+
+#turnos-disponibles{
+  display: grid;
+  grid-template-columns: 24% 24% 24% 24%;
+  row-gap: 2px;
+  column-gap: 2px;
+}
+
+@media (max-width: 768px) {
+  #turnos-disponibles{
+    display: grid;
+    grid-template-columns: 50% 50%;
+    row-gap: 2px;
+    column-gap: 2px;
+  }
 }
