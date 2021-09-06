@@ -17,6 +17,18 @@ body{
   column-gap: 2px;
 }
 
+#form-turno{
+  text-align: center;
+}
+
+.form-group{
+  margin: 25px;
+}
+
+.label-form{
+  font-size: 20px;
+}
+
 @media (max-width: 768px) {
   #turnos-disponibles{
     display: grid;

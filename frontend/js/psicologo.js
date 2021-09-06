@@ -26,6 +26,14 @@ const getTurnos = async () => {
   return result;
 }
 
+const showAlertMessage = (message, tipoAlerta) =>{
+  const divMessage = document.getElementById('message');
+  divMessage.innerHTML =`<div class="alert alert-${tipoAlerta}" role="alert">${message}</div>`;
+  setTimeout(()=>{
+      divMessage.innerHTML = '';
+  },5000);
+}
+
 const showCitas = (citas) => {
     const citasAnteriores = citas.filter(cita => cita.estado == 'Finalizada');
     const divHistorial = document.getElementById('historial');
@@ -86,6 +94,34 @@ const showTurnos = (turnos) => {
   divTurnos.innerHTML = elements;
 }
 
+const crearTurnos = async (fecha, hora, estado, idPsicologo) => {
+
+  const uri = `http://127.0.0.1:4567/turnos`;
+
+  const newTurno = {
+    'fecha': fecha,
+    'hora': hora,
+    'estado': estado,
+    'idPsicologo': idPsicologo
+  }
+
+  fetch(uri, {
+    method: 'POST',
+    mode: 'no-cors', 
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(newTurno)
+  })
+  
+  .catch(e => {
+    return undefined;
+  })
+
+  return newTurno;
+
+}
+
 
 window.addEventListener("load", async(event) => {
     const tipo = localStorage.getItem('tipo');
@@ -144,6 +180,23 @@ const setInvisible = () => {
       elements[i].style.display='none';
     }
 }
+
+document.getElementById('crear-button')
+.addEventListener('click', async (e) =>{
+  const fecha = document.getElementById('fecha').value;
+  const hora = document.getElementById('hora').value;
+  const estado = "disponible";
+  const idPsicologo = localStorage.getItem("id");
+  const turno = await crearTurnos(fecha, hora, estado, idPsicologo);
+
+  if(turno != undefined){
+    showAlertMessage("Turno creado con exito", 'success');
+  }
+  else{
+    showAlertMessage("Error al crear un turno", 'danger');
+  }
+
+});
 
 document.getElementById('tab-inicio')
 .addEventListener('click', e =>{
