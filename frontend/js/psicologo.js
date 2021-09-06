@@ -19,6 +19,13 @@ const getCitas = async () => {
     return result;
 }
 
+const getTurnos = async () => {
+  const uri = `http://127.0.0.1:4567/turnosDisponibles/${localStorage.getItem("id")}`;
+  const response = await fetch(uri);
+  const result = response.json();
+  return result;
+}
+
 const showCitas = (citas) => {
     const citasAnteriores = citas.filter(cita => cita.estado == 'Finalizada');
     const divHistorial = document.getElementById('historial');
@@ -51,6 +58,32 @@ const showCitas = (citas) => {
     
 }
 
+const showTurnos = (turnos) => {
+
+  const turnosDisp = turnos.filter(turno => turno.estado == "disponible");
+  const divTurnos = document.getElementById("agendar");
+  let elements = '';
+  if(turnosDisp.length > 0){
+    turnosDisp.forEach(turno => {
+      elements += `<div class="card card-body text-center" id="turno-${turno.id}">
+                    <p class="card-text">
+                      Fecha: ${turno.fecha}
+                    </p>
+                    <p class="card-text">
+                      Hora: ${turno.hora}
+                    </p>
+                    <p class ="card-text">
+                      Estado: ${turno.estado}
+                    </p>
+                  </div>`;
+    })
+  }
+  else{
+    divHistorial.innerHTML = '<h3 class="text-center">No hay información para mostrar</h3>';
+  }
+  divTurnos.innerHTML = elements;
+}
+
 
 window.addEventListener("load", async(event) => {
     const tipo = localStorage.getItem('tipo');
@@ -61,10 +94,13 @@ window.addEventListener("load", async(event) => {
         else{
             const psicologo = await getInfo();
             document.getElementById('saludo').textContent = `Bienvenido ${psicologo[0].nombreCompleto}`;
+            document.getElementById('nombre').textContent = `${psicologo[0].nombreCompleto}`;
 
             const citas = await getCitas();
+            const turnos = await getTurnos();
 
             showCitas(citas);
+            showTurnos(turnos);
 
             const result = citas.find(item => item.estado == 'No iniciada')
 
@@ -117,6 +153,12 @@ document.getElementById('tab-agendar')
 .addEventListener('click', e =>{
   setInvisible();
   document.getElementById('agendar').style.display='block';
+});
+
+document.getElementById('tab-creart')
+.addEventListener('click', e => {
+  setInvisible();
+  document.getElementById('crear').style.display='block';
 });
 
 document.getElementById('tab-historial')

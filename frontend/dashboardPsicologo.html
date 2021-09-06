@@ -15,22 +15,36 @@
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
         <div class="container-fluid">
             <h2 class="navbar-brand">PsicoAgenda</h2>
-            <button onclick="borrarL()">Cerrar sesion</button>
         </div>
     </nav>
 
 
-    <div class="row justify-content-start p-2">
+    <div class="row justify-content-start">
 
-        <div class="col-md-2 bg-light bg-gradient">
+        <div class="col-md-2 ps-4 pt-2" id="menu">
+
+            <div class="card text-center">
+                <div class="card-body bg-ligth">
+                    <img src="./img/perfil.png" class="img-fluid" alt="profile">
+                    <p id="nombre" class="card-text"></p>
+                </div>
+                <div class="card-footer">
+                    <a onclick="borrarL()"><img src="./img/salir.png" class="img-fluid" alt="salir">Salir</a>
+                </div>
+            </div>
+
+            <hr>
+
             <ul class="uk-tab-right" uk-tab>
                 <li class="uk-active tab" id="tab-inicio"><a href="">Inicio</a></li>
-                <li class="tab"><a href="#" id="tab-agendar">Turnos</a></li>
+                <li class="tab"><a href="#" id="tab-agendar">Turnos actuales</a></li>
+                <li class="tab"><a href="#" id="tab-creart">Crear turnos</a></li>
                 <li class="tab"><a href="#" id="tab-historial">Citas</a></li>
             </ul>
         </div>
 
         <div class="col-md-10">
+
             <div id="inicio" class="option-panel">
               <div class="text-center">
                 <h3 id="saludo"></h3>
@@ -38,8 +52,12 @@
                 <div id="cita-info"></div>
               </div>
             </div>
+
             <div id="agendar" class="option-panel" style="display: none;">
-                Generar Turnos
+                Turnos actuales
+            </div>
+            <div id="crear" class="option-panel" style="display: none;">
+                Crear Turnos
             </div>
             <div id="historial" class="option-panel" style="display: none;"></div>
         </div>
