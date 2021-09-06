@@ -58,10 +58,12 @@ const showCitas = (citas) => {
     
 }
 
+
+
 const showTurnos = (turnos) => {
 
   const turnosDisp = turnos.filter(turno => turno.estado == "disponible");
-  const divTurnos = document.getElementById("agendar");
+  const divTurnos = document.getElementById("turnos-disponibles");
   let elements = '';
   if(turnosDisp.length > 0){
     turnosDisp.forEach(turno => {
