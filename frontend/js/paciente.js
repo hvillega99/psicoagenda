@@ -162,12 +162,25 @@ const filterTurnos = (arrayTurnos) => {
   });
 }
 
+const sortTurnos = (turnos) => {
+  return turnos.sort((x, y) =>{
+    if(x.fecha < y.fecha){
+      return -1;
+    }else if(x.fecha > y.fecha){
+      return 1;
+    }else{
+      return ((x.hora < y.hora) ? -1 : ((x.hora > y.hora) ? 1 : 0));
+    }
+  });
+}
+
 const renderTurnos = async (idPsicologo) => {
   localStorage.setItem('idPsicologo', idPsicologo);
   const response = await fetch(`http://127.0.0.1:4567/turnosDisponibles/${idPsicologo}`);
   const allTurnos = await response.json();
 
-  const turnos = filterTurnos(allTurnos);
+  let turnos = filterTurnos(allTurnos);
+  turnos = sortTurnos(turnos);
 
   const divTurnos = document.getElementById('turnos-disponibles');
   let elements = '';
