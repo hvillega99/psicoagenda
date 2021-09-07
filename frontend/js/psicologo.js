@@ -8,21 +8,28 @@ function borrarL() {
 const getInfo = async () => {
     const uri = `http://127.0.0.1:4567/psicologos/${localStorage.getItem("id")}`;
     const response = await fetch(uri);
-    const result = response.json();
+    const result = await response.json();
     return result;
 }
 
 const getCitas = async () => {
     const uri = `http://127.0.0.1:4567/citasPorPsicologo/${localStorage.getItem("id")}`;
     const response = await fetch(uri);
-    const result = response.json();
+    const result = await response.json();
     return result;
 }
 
 const getTurnos = async () => {
   const uri = `http://127.0.0.1:4567/turnosDisponibles/${localStorage.getItem("id")}`;
   const response = await fetch(uri);
-  const result = response.json();
+  const result = await response.json();
+  return result;
+}
+
+const getAtenciones = async (idPaciente) => {
+  const uri = `http://127.0.0.1:4567/atenciones/${idPaciente}`;
+  const response = await fetch(uri);
+  const result = await response.json();
   return result;
 }
 
@@ -74,10 +81,7 @@ const renderCitas = (citas, fecha) => {
 const renderCitaDetalles = async (idCita) => {
   const divDetalles = document.getElementById('detalles-cita');
   const citas = await getCitas();
-  console.log(citas)
   const targetCita = citas.find(cita => cita.id == idCita);
-
-  console.log(idCita)
 
   divDetalles.innerHTML = `<div class="card text-center">
                             <div class="card-header">
@@ -90,10 +94,33 @@ const renderCitaDetalles = async (idCita) => {
                                 Hora: ${targetCita.hora}
                               </p>
                               <button class="btn btn-primary">Iniciar cita</button>
-                              <button class="btn btn-secondary">Ver historia clínica</button>
+                              <button class="btn btn-secondary" data-bs-toggle="modal" 
+                              data-bs-target="#staticBackdrop" 
+                              onclick=showHC(${targetCita.idPaciente})>
+                              Ver historia clínica
+                              </button>
                             </div>
                           </div>`;
 
+}
+
+const showHC = async (idPaciente) => {
+  const atenciones = await getAtenciones(idPaciente);
+  const divHC = document.getElementById('HC-content');
+
+  if(atenciones.length > 0){
+    let elements = '<ul class="list-group">'
+    atenciones.forEach(atencion => {
+      elements += `<li class="list-group-item">
+        <p>Psicólogo: ${atencion.nombreCompleto} - Fecha: ${atencion.fecha}</p>
+        <p>${atencion.observaciones}</p></li>`
+    })
+
+    elements += '</ul>';
+    divHC.innerHTML = elements;
+  }else{
+    divHC.textContent = 'No hay registros';
+  }
 }
 
 const showTurnos = (turnos) => {
@@ -231,7 +258,6 @@ document.getElementById('crear-button')
 
 document.getElementById('fecha-citas')
 .addEventListener('change', async (e) => {
-  console.log(e.target.value);
   const citas = await getCitas();
   renderCitas(citas, e.target.value);
   document.getElementById('detalles-cita').innerHTML='';

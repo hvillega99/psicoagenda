@@ -68,7 +68,7 @@ get '/atenciones/:id' do
     @patenciones = client.query("SELECT atenciones.idPaciente, psicologos.nombreCompleto, atenciones.observaciones, atenciones.fecha
                                 FROM atenciones
                                 INNER join psicologos on atenciones.idPsicologo = psicologos.id
-                                WHERE idPaciente = #{params[:id].to_i}", :symbolize_keys => true)
+                                WHERE idPaciente = #{params[:id].to_i}", :symbolize_keys => true).each
     erb :resultpatenciones
 end
 
