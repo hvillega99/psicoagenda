@@ -8,6 +8,7 @@ body{
 
 #menu{
   background-color: #ECF0F1;
+  height: 100vh;
 }
 
 #turnos-disponibles{
@@ -36,4 +37,10 @@ body{
     row-gap: 2px;
     column-gap: 2px;
   }
+
+  #menu{
+    background-color: #ECF0F1;
+    height: 100%;
+  }
+
 }
