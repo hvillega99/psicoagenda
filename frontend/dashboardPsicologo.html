@@ -37,15 +37,16 @@
 
             <ul class="uk-tab-right" uk-tab>
                 <li class="uk-active tab" id="tab-inicio"><a href="">Inicio</a></li>
-                <li class="tab"><a href="#" id="tab-agendar">Turnos actuales</a></li>
-                <li class="tab"><a href="#" id="tab-creart">Crear turnos</a></li>
-                <li class="tab"><a href="#" id="tab-historial">Citas</a></li>
+                <li class="tab"><a href="#" id="tab-citas">Citas</a></li>
+                <li class="tab"><a href="#" id="tab-agendar">Turnos</a></li>
+                <li class="tab"><a href="#" id="tab-creart">Crear turno</a></li>
             </ul>
         </div>
 
         <div class="col-md-10">
+            <div id="message" class="text-center"></div>
 
-            <div id="inicio" class="option-panel">
+            <div id="inicio" class="option-panel pt-4">
               <div class="text-center">
                 <h3 id="saludo"></h3>
                 <p id="status"></p>
@@ -53,13 +54,14 @@
               </div>
             </div>
 
-            <div id="agendar" class="option-panel" style="display: none;">
+            <div id="agendar" class="option-panel pt-4" style="display: none;">
                 Turnos actuales
                 <div class="col-md-8">
                     <id id="turnos-disponibles"></id>
                 </div>
             </div>
-            <div id="crear" class="option-panel" style="display: none;">
+
+            <div id="crear" class="option-panel pt-4" style="display: none;">
                 Crear Turnos
                 <form id="form-turno"> 
                     <div class="form-group">
@@ -75,7 +77,20 @@
                     </div>
                 </form>
             </div>
-            <div id="historial" class="option-panel" style="display: none;"></div>
+
+            <div id="citas" class="option-panel pt-4" style="display: none;">
+                <h3 class="text-center">Citas</h3>
+                <div class="row">
+                    <div class="col-md-4 text-center">
+                        <h5>Pacientes</h5>
+                        <input id="fecha-citas" type="date" required> <br>
+                        <div id="lista-pacientes" class="d-flex flex-column pt-2"></div>
+                    </div>
+                    <div class="col-md-8 p-4">
+                        <id id="detalles-cita"></id>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 

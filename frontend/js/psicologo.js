@@ -34,39 +34,67 @@ const showAlertMessage = (message, tipoAlerta) =>{
   },5000);
 }
 
-const showCitas = (citas) => {
-    const citasAnteriores = citas.filter(cita => cita.estado == 'Finalizada');
-    const divHistorial = document.getElementById('historial');
+const getFecha = () => {
+  const fecha = new Date();
+  const dateItems = fecha.toLocaleDateString().split('/');
+  return `${dateItems[2]}-${dateItems[1].length < 2? '0'+dateItems[1]:dateItems[1]}-${dateItems[0].length < 2? '0'+dateItems[0]:dateItems[0]}`;
+}
 
-    if (citasAnteriores.length > 0){
-        let table = `<table class="table">
-                        <thead>
-                            <tr>
-                                <th scope="col">Paciente</th>
-                                <th scope="col">Fecha</th>
-                                <th scope="col">Hora</th>
-                            </tr>
-                        </thead>
-                        <tbody>`;
+const renderCitas = (citas, fecha) => {
+  const result = citas.filter(cita => cita.fecha == fecha && cita.estado == 'No iniciada');
+  result.sort((x, y) =>{
+    return ((x.hora < y.hora) ? -1 : ((x.hora > y.hora) ? 1 : 0));
+  });
+  
+  const divPacientes = document.getElementById('lista-pacientes')
 
-        citasAnteriores.forEach(element => {
-            table +=`<tr>
-                        <td>${element.nombreCompleto}</td>
-                        <td>${element.fecha}</td>
-                        <td>${element.hora}</td>
-                    </tr>`;
-        });
+  if(result.length > 0){
 
-        table += `</tbody></table>`;
+    let lista = `<div class="btn-group d-flex flex-column" 
+                  role="group" aria-label="Basic radio toggle button group">`;
 
-        divHistorial.innerHTML ='<h3 class="text-center">Historial de citas</h3>' + table;
-    }else{
-        divHistorial.innerHTML = '<h3 class="text-center">No hay información para mostrar</h3>';
-    }
+    result.forEach(item => {
+      lista += `<input type="radio" class="btn-check" name="btnradio" id="cita-${item.id}" 
+                autocomplete="off" onclick=renderCitaDetalles(${item.id}) cheked>
+                <label class="btn btn-outline-primary" for="cita-${item.id}">
+                  ${item.nombreCompleto}
+                </label>`
+    })
+    
+    divPacientes.innerHTML = lista + '</div>';
+
+  }else{
+
+    divPacientes.textContent = 'No hay pacientes agendados';
+
+  }
     
 }
 
+const renderCitaDetalles = async (idCita) => {
+  const divDetalles = document.getElementById('detalles-cita');
+  const citas = await getCitas();
+  console.log(citas)
+  const targetCita = citas.find(cita => cita.id == idCita);
 
+  console.log(idCita)
+
+  divDetalles.innerHTML = `<div class="card text-center">
+                            <div class="card-header">
+                              Información de la cita
+                            </div>
+                            <div class="card-body">
+                              <h5 class="card-title">Paciente: ${targetCita.nombreCompleto}</h5>
+                              <p class="card-text">
+                                Fecha: ${targetCita.fecha}
+                                Hora: ${targetCita.hora}
+                              </p>
+                              <button class="btn btn-primary">Iniciar cita</button>
+                              <button class="btn btn-secondary">Ver historia clínica</button>
+                            </div>
+                          </div>`;
+
+}
 
 const showTurnos = (turnos) => {
 
@@ -137,8 +165,10 @@ window.addEventListener("load", async(event) => {
             const citas = await getCitas();
             const turnos = await getTurnos();
 
-            showCitas(citas);
+            renderCitas(citas, getFecha());
             showTurnos(turnos);
+
+            document.getElementById('fecha-citas').value = getFecha();
 
             const result = citas.find(item => item.estado == 'No iniciada')
 
@@ -183,6 +213,7 @@ const setInvisible = () => {
 
 document.getElementById('crear-button')
 .addEventListener('click', async (e) =>{
+  e.preventDefault();
   const fecha = document.getElementById('fecha').value;
   const hora = document.getElementById('hora').value;
   const estado = "disponible";
@@ -196,6 +227,14 @@ document.getElementById('crear-button')
     showAlertMessage("Error al crear un turno", 'danger');
   }
 
+});
+
+document.getElementById('fecha-citas')
+.addEventListener('change', async (e) => {
+  console.log(e.target.value);
+  const citas = await getCitas();
+  renderCitas(citas, e.target.value);
+  document.getElementById('detalles-cita').innerHTML='';
 });
 
 document.getElementById('tab-inicio')
@@ -216,8 +255,8 @@ document.getElementById('tab-creart')
   document.getElementById('crear').style.display='block';
 });
 
-document.getElementById('tab-historial')
+document.getElementById('tab-citas')
 .addEventListener('click', e =>{
   setInvisible();
-  document.getElementById('historial').style.display='block';
+  document.getElementById('citas').style.display='block';
 });
