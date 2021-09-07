@@ -75,8 +75,8 @@ const renderCitas = (citas, fecha) => {
                   role="group" aria-label="Basic radio toggle button group">`;
 
     result.forEach(item => {
-      lista += `<input type="radio" class="btn-check" name="btnradio" id="cita-${item.id}" 
-                autocomplete="off" onclick=renderCitaDetalles(${item.id}) cheked>
+      lista += `<input type="radio" class="btn-check cita" name="btnradio" id="cita-${item.id}" 
+                autocomplete="off" onclick=renderCitaDetalles(${item.id},${item.idPaciente}) cheked>
                 <label class="btn btn-outline-primary" for="cita-${item.id}">
                   ${item.nombreCompleto}
                 </label>`
@@ -98,22 +98,27 @@ const renderDatos = (psicologo) => {
   document.getElementById('perfilMail').textContent = `Email: ${psicologo.email}`;
 }
 
-const renderCitaDetalles = async (idCita) => {
+const renderCitaDetalles = async (idCita, idPaciente) => {
   const divDetalles = document.getElementById('detalles-cita');
   const citas = await getCitas();
   const targetCita = citas.find(cita => cita.id == idCita);
 
+  localStorage.setItem('idPaciente', idPaciente);
+
   divDetalles.innerHTML = `<div class="card text-center">
-                            <div class="card-header">
+                            <div class="card-header" id="titulo-cita">
                               Información de la cita
                             </div>
-                            <div class="card-body">
+                            <div class="card-body" id="detalles-cita">
                               <h5 class="card-title">Paciente: ${targetCita.nombreCompleto}</h5>
                               <p class="card-text">
                                 Fecha: ${targetCita.fecha}
                                 Hora: ${targetCita.hora}
                               </p>
-                              <button class="btn btn-primary">Iniciar cita</button>
+
+                              <div id="observacion"></div>
+                              
+                              <button class="btn btn-primary" id="gestion-cita" onclick=gestionarCita(${targetCita.id})>Iniciar cita</button>
                               <button class="btn btn-secondary" data-bs-toggle="modal" 
                               data-bs-target="#staticBackdrop" 
                               onclick=showHC(${targetCita.idPaciente})>
@@ -122,6 +127,62 @@ const renderCitaDetalles = async (idCita) => {
                             </div>
                           </div>`;
 
+}
+
+const disableListaCitas = (value = true) => {
+  const elements = document.getElementsByClassName('cita');
+  for(let i = 0; i < elements.length; i++){
+    elements[i].disabled = value;
+  }
+}
+
+const gestionarCita = (idCita) => {
+  const btnGestion = document.getElementById('gestion-cita');
+  btnGestion.textContent == 'Iniciar cita'? iniciarCita(btnGestion) : finalizarCita(idCita);
+}
+
+const iniciarCita = (btnGestion) => {
+  disableListaCitas();
+  document.getElementById('titulo-cita').textContent = 'Cita en proceso';
+  document.getElementById('observacion').innerHTML = `<label for="floatingTextarea">Observaciones</label> 
+                                                      <textarea class="form-control" id="text-observaciones">`;
+  btnGestion.setAttribute('class', 'btn btn-danger');
+  btnGestion.textContent = 'Finalizar cita';
+}
+
+const finalizarCita = async (idCita) => {
+  disableListaCitas(false);
+  const url = 'http://127.0.0.1:4567';
+
+  const atencion = {
+    "idPaciente": localStorage.getItem('idPaciente'),
+    "idPsicologo": localStorage.getItem('id'),
+    "observaciones": document.getElementById('text-observaciones').value,
+    "fecha": getFecha()
+  };
+
+  await fetch(`${url}/atenciones`, {
+    method: 'POST',
+    mode: 'no-cors', 
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(atencion)
+  })
+
+  const responseCita = await fetch(`${url}/citas/${idCita}`, {
+      method: 'PUT',
+      mode: 'no-cors', 
+      headers: {
+          'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({'estado': 'Finalizada'})
+    })
+
+  console.log(responseCita);
+  const citas = await getCitas();
+  renderCitas(citas, getFecha());
+  document.getElementById('detalles-cita').innerHTML='';
 }
 
 const showHC = async (idPaciente) => {
@@ -145,11 +206,23 @@ const showHC = async (idPaciente) => {
 
 const showTurnos = (turnos) => {
 
-  const turnosDisp = turnos.filter(turno => turno.estado == "disponible");
+  //const turnosDisp = turnos.filter(turno => turno.estado == "disponible");
+  
   const divTurnos = document.getElementById("turnos-disponibles");
   let elements = '';
-  if(turnosDisp.length > 0){
-    turnosDisp.forEach(turno => {
+  if(turnos.length > 0){
+
+    turnos.sort((x, y) =>{
+      if(x.fecha < y.fecha){
+        return -1;
+      }else if(x.fecha > y.fecha){
+        return 1;
+      }else{
+        return ((x.hora < y.hora) ? -1 : ((x.hora > y.hora) ? 1 : 0));
+      }
+    });
+
+    turnos.forEach(turno => {
       elements += `<div class="card card-body text-center" id="turno-${turno.id}">
                     <p class="card-text">
                       Fecha: ${turno.fecha}
@@ -226,7 +299,7 @@ window.addEventListener("load", async(event) => {
             
             const result = await getNTurnos();
             if(result){
-                document.getElementById('status').textContent = 'Estadisticas de turno';
+                divStatus.textContent = 'Estadísticas de turno';
                 let elements = '';
                 
                   elements += `<h5 class="card-title">Turnos totales: ${result[0].t_totales}</h5>
@@ -237,7 +310,7 @@ window.addEventListener("load", async(event) => {
                 //const todos = await getNTurnosT();
                 divInfo.innerHTML = elements
             }else{
-                document.getElementById('status').textContent = 'Actualmente no tiene estadisticas';
+                divStatus.textContent = 'Actualmente no tiene estadisticas';
             }
             
         }
@@ -266,6 +339,13 @@ document.getElementById('crear-button')
 
   if(turno != undefined){
     showAlertMessage("Turno creado con exito", 'success');
+    document.getElementById('form-turno').reset();
+
+    setTimeout(async () => {
+      const turnos = await getTurnos();
+      showTurnos(turnos);
+    }, 1000);
+    
   }
   else{
     showAlertMessage("Error al crear un turno", 'danger');
@@ -292,11 +372,11 @@ document.getElementById('tab-agendar')
   document.getElementById('agendar').style.display='block';
 });
 
-document.getElementById('tab-creart')
+/*document.getElementById('tab-creart')
 .addEventListener('click', e => {
   setInvisible();
   document.getElementById('crear').style.display='block';
-});
+});*/
 
 document.getElementById('tab-citas')
 .addEventListener('click', e =>{

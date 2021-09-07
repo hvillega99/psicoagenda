@@ -39,7 +39,6 @@
                 <li class="uk-active tab" id="tab-inicio"><a href="">Inicio</a></li>
                 <li class="tab"><a href="#" id="tab-citas">Citas</a></li>
                 <li class="tab"><a href="#" id="tab-agendar">Turnos</a></li>
-                <li class="tab"><a href="#" id="tab-creart">Crear turno</a></li>
                 <li class="tab"><a href="#" id="tab-perfil">Datos personales</a></li>
             </ul>
         </div>
@@ -54,7 +53,7 @@
                     <div id="cita-info">
                         <div class="card text-center">
                             <div class="card-header">
-                                Division de turnos
+                                División de turnos
                             </div>
                             <div class="card-body" id="nEstadisticas"></div>
                         </div>
@@ -63,27 +62,36 @@
             </div>
 
             <div id="agendar" class="option-panel pt-4" style="display: none;">
-                Turnos actuales
-                <div class="col-md-8">
-                    <id id="turnos-disponibles"></id>
+                <h3 class="text-center">Turnos</h3>
+                <div class="row">
+                    <div class="col-md-4 text-center">
+                        <h5>Crear Turnos</h5>
+                        <form id="form-turno"> 
+                            <div class="form-group">
+                                <label for="fecha" class="label-form">Fecha: </label>
+                                <input id="fecha" type="date" required> <br>
+                            </div>
+                            <div class="form-group">
+                                <Label for="hora" class="label-form">Hora: </Label>
+                                <input id="hora" type="time" required> <br>
+                            </div>
+                            <div class="form-group">
+                                <button type="submit" id="crear-button" class="btn btn-primary">Crear Turno</button>
+                            </div>
+                        </form>
+                    </div>
+
+                    <div class="col-md-8">
+                        <h5>Turnos disponibles</h5>
+                        <id id="turnos-disponibles"></id>
+                    </div>
+
                 </div>
             </div>
 
             <div id="crear" class="option-panel pt-4" style="display: none;">
-                Crear Turnos
-                <form id="form-turno"> 
-                    <div class="form-group">
-                        <label for="fecha" class="label-form">Fecha: </label>
-                        <input id="fecha" type="date" required> <br>
-                    </div>
-                    <div class="form-group">
-                        <Label for="hora" class="label-form">Hora: </Label>
-                        <input id="hora" type="time" required> <br>
-                    </div>
-                    <div class="form-group">
-                        <button type="submit" id="crear-button" class="btn btn-primary">Crear Turno</button>
-                    </div>
-                </form>
+
+                
             </div>
 
             <div id="citas" class="option-panel pt-4" style="display: none;">
@@ -91,7 +99,7 @@
                 <div class="row">
                     <div class="col-md-4 text-center">
                         <h5>Pacientes</h5>
-                        <input id="fecha-citas" type="date" required> <br>
+                        <input id="fecha-citas" type="date" class="cita" required> <br>
                         <div id="lista-pacientes" class="d-flex flex-column pt-2"></div>
                     </div>
                     <div class="col-md-8 p-4">
