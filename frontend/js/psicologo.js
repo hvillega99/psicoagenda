@@ -26,6 +26,20 @@ const getTurnos = async () => {
   return result;
 }
 
+const getNTurnos = async () => {
+  const uri = `http://127.0.0.1:4567/turnosTotales/cantidad/${localStorage.getItem("id")}`;
+  const response = await fetch(uri);
+  const result = await response.json();
+  return result;
+}
+
+const getNTurnosT = async () => {
+  const uri = `http://127.0.0.1:4567/turnosTotales/cantidad`;
+  const response = await fetch(uri);
+  const result = await response.json();
+  return result;
+}
+
 const getAtenciones = async (idPaciente) => {
   const uri = `http://127.0.0.1:4567/atenciones/${idPaciente}`;
   const response = await fetch(uri);
@@ -204,30 +218,26 @@ window.addEventListener("load", async(event) => {
 
             document.getElementById('fecha-citas').value = getFecha();
 
-            const result = citas.find(item => item.estado == 'No iniciada')
+            //const result = citas.find(item => item.estado == 'No iniciada')
 
             const divStatus = document.getElementById('status');
             const divInfo = document.getElementById('cita-info');
 
+            
+            const result = await getNTurnos();
             if(result){
-                document.getElementById('status').textContent = 'Usted tiene una cita agendada';
-
-                const divInfo = document.getElementById('cita-info');
-                divInfo.innerHTML = `<div class="card text-center">
-                <div class="card-header">
-                  Información de la cita
-                </div>
-                <div class="card-body">
-                  <h5 class="card-title">Paciente: ${result.nombreCompleto}</h5>
-                  <p class="card-text">
-                    Fecha: ${result.fecha}
-                    Hora: ${result.hora}
-                  </p>
-                </div>
-              </div>`
-
+                document.getElementById('status').textContent = 'Estadisticas de turno';
+                let elements = '';
+                
+                  elements += `<h5 class="card-title">Turnos totales: ${result[0].t_totales}</h5>
+                              <h5 class="card-title">Turnos disponibles: ${result[1].t_disponibles}</h5>
+                              <h5 class="card-title">Turnos ocupados: ${result[2].t_ocupados}</h5>
+                              `;
+                const divInfo = document.getElementById('nEstadisticas');
+                //const todos = await getNTurnosT();
+                divInfo.innerHTML = elements
             }else{
-                document.getElementById('status').textContent = 'Actualmente no tiene una cita agendada';
+                document.getElementById('status').textContent = 'Actualmente no tiene estadisticas';
             }
             
         }
