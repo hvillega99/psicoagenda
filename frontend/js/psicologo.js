@@ -78,6 +78,12 @@ const renderCitas = (citas, fecha) => {
     
 }
 
+const renderDatos = (psicologo) => {
+  document.getElementById('perfilNombre').textContent = `Nombre: ${psicologo.nombreCompleto}`;
+  document.getElementById('perfilCedula').textContent = `Cedula: ${psicologo.cedula}`;
+  document.getElementById('perfilMail').textContent = `Email: ${psicologo.email}`;
+}
+
 const renderCitaDetalles = async (idCita) => {
   const divDetalles = document.getElementById('detalles-cita');
   const citas = await getCitas();
@@ -192,6 +198,7 @@ window.addEventListener("load", async(event) => {
             const citas = await getCitas();
             const turnos = await getTurnos();
 
+            renderDatos(psicologo[0]);
             renderCitas(citas, getFecha());
             showTurnos(turnos);
 
@@ -286,3 +293,9 @@ document.getElementById('tab-citas')
   setInvisible();
   document.getElementById('citas').style.display='block';
 });
+
+document.getElementById('tab-perfil')
+.addEventListener('click', e => {
+  setInvisible();
+  document.getElementById('perfil').style.display='block';
+})
