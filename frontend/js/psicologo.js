@@ -237,7 +237,7 @@ const showTurnos = (turnos) => {
     })
   }
   else{
-    divHistorial.innerHTML = '<h3 class="text-center">No hay información para mostrar</h3>';
+    divTurnos.innerHTML = '<h3 class="text-center">No hay información para mostrar</h3>';
   }
   divTurnos.innerHTML = elements;
 }
