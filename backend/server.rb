@@ -99,24 +99,6 @@ get '/turnosDisponibles/:idPsicologo' do
     erb :turnos
 end
 
-#Obtener cantidad de turnos totales 
-get '/turnosTotales/cantidad' do
-    arreglo = []
-    los_psicologos = client.query("SELECT * from psicologos")
-    for i in los_psicologos
-        persona = {}
-        cantidadT = client.query("SELECT COUNT(*) as t_totales FROM turnos where idPsicologo='#{i["id"]}'").each
-        cantidadD = client.query("SELECT COUNT(*) as t_disponibles FROM turnos where estado='disponible' and idPsicologo='#{i["id"]}'").each
-        cantidadO = client.query("SELECT COUNT(*) as t_ocupados FROM turnos where estado='ocupado' and idPsicologo='#{i["id"]}'").each
-        persona["id"]=i["id"]
-        persona["turnos"]=[cantidadT[0],cantidadD[0],cantidadO[0]]
-        arreglo.push(persona)
-    end
-    @result = arreglo
-    erb :turnos
-
-end
-
 #Obtener cantidad de turnos totales por id de psicologo
 get '/turnosTotales/cantidad/:idPsicologo' do
     cantidadT = client.query("SELECT COUNT(*) as t_totales FROM turnos where idPsicologo='#{params[:idPsicologo]}'", :symbolize_keys => true).each

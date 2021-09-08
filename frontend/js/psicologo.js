@@ -172,7 +172,7 @@ const finalizarCita = async (idCita) => {
 
   const responseCita = await fetch(`${url}/citas/${idCita}`, {
       method: 'PUT',
-      mode: 'no-cors', 
+      mode: 'cors', 
       headers: {
           'Content-Type': 'application/json'
       },
