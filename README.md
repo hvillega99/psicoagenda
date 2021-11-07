@@ -1,2 +1,2 @@
 # psicoagenda
-Sistema de citas psicológicas
+Psychological appointment scheduling system
